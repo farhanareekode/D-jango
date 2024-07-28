@@ -1,0 +1,22 @@
+.card {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
+.image {
+  display: inline-block;
+  border: solid 2px rgba(0, 0, 0, 0.2);
+}
+.container {
+  padding: 15px 0px;
+}
+.image img {
+  width: 170px;
+  height: 190px;
+}
+.heading {
+  text-align: center;
+}
+.container:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}

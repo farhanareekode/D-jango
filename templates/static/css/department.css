@@ -1,0 +1,25 @@
+body {
+    background-color: rgb(36, 157, 142);
+     text-align: center;
+}
+.container  {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.head {
+    height: 40px;
+}
+.tags  {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+.tag1 {
+    width: 700PX;
+    padding: 0 15px 0 15px;
+    background-color: rgb(179, 229, 191);
+    border: solid 1px;
+   
+}

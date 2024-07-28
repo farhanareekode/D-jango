@@ -1,0 +1,22 @@
+.body{
+    margin: 0;
+     padding: 0;
+}
+.head {
+    text-align: center;
+    background-color: aqua;
+}
+.container {
+    background-color: aqua;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0;
+    height: 500px;
+    
+}
+button{
+    padding: 6px;
+    margin: 10px 0 0 100px;
+    
+}
