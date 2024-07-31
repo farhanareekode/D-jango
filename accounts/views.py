@@ -39,9 +39,9 @@ def login_view(request):
 
             # Check user role and redirect to their profile
             if user.is_doctor:
-                return redirect('doctor_profile', username=user.username)
+                return redirect('doctor_profile', identifier=user.username)
             else:
-                return redirect('patient_profile', username=user.username)
+                return redirect('patient_profile', identifier=user.username)
     else:
         form = LoginForm()
     return render(request, 'accounts/login.html', {'form': form})

@@ -1,0 +1,23 @@
+{% extends 'home/base.html' %}
+ {% block title %} doctors {% endblock %}
+  {% block content %} 
+  {% load static %}
+<link rel="stylesheet" href="{% static '/css/doctor.css'%}" />
+<div class="heading"><h1>OUR DOCTORS</h1></div>
+
+<div class="card">
+    
+  {% for d in doctors%}
+
+  <div class="image">
+    <img src="{{d.doc_image.url}}" />
+
+    <div class="container">
+      <h4>Dr. {{d.doc_name}}</h4>
+      <p>{{d.doc_spec}}</p>
+      <h6>{{d.dep_name}} Department</h6>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

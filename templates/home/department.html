@@ -1,0 +1,26 @@
+{% extends 'home/base.html' %}
+
+{% block title %} department {% endblock %}
+
+ {% block content %}  
+
+ {%load static%}
+
+<link rel="stylesheet" href="{% static '/css/department.css'%}" />
+
+<div class="container">
+  <div class="head"><h1>OUR DEPARTMENTS</h1></div>
+  <br>
+  
+</div>
+{% for d in dept %}
+<br>
+<div class="tags">
+  <div class="tag1">
+    <h2>{{d.dep_name}}</h2>
+    <p>{{d.dep_decription}}</p>
+  </div>
+</div>
+{% endfor %} 
+
+{% endblock %}
