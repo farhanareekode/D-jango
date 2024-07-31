@@ -130,3 +130,9 @@ MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "templates/static"]
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'lifecarehospitalmalappuram@gmail.com'
+EMAIL_HOST_PASSWORD = 'wduv nsxn stmb bbsl'

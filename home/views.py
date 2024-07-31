@@ -11,20 +11,19 @@ def index(request):
 
 
 @login_required
-def doctor_profile(request, username):
+def doctor_profile(request, identifier):
     # Fetch user based on the username
-    user = get_object_or_404(CustomUser, username=username, is_doctor=True)
-
+    user = get_object_or_404(CustomUser, username=identifier, is_doctor=True)
+    current_user = request.user
     # Check if the doctor is approved
     if not user.is_approved:
         return HttpResponseForbidden('Access Denied. Waite for approved.')
-
     # Check if the current user is accessing their own profile
-    if username == request.user.username:
-        # Render the profile page for the current user
-        return render(request, 'home/doctor_profile.html', {'user': user})
-    else:
+    if identifier != current_user.username:
         return HttpResponseForbidden('Access Denied')
+        # Render the profile page for the current user
+    return render(request, 'home/doctor_profile.html', {'user': user})
+
 
 
 @login_required

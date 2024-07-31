@@ -1,11 +1,22 @@
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.core.mail import send_mail
+
 from .models import CustomUser
 
 
 @admin.action(description='Approve selected doctors')
 def approve_doctors(modeladmin, request, queryset):
-    queryset.filter(is_doctor=True).update(is_approved=True)
+    doctors = queryset.filter(is_doctor=True)
+    doctors.update(is_approved=True)
+
+    for doctor in doctors:
+        send_mail(
+            'Registration Approved',
+            'Dear {},\n\nYour registration has been approved by the admin.\n\nBest regards,'
+            '\nHospital Management Team'.format(doctor.username), settings.DEFAULT_FROM_EMAIL,
+            [doctor.email], fail_silently=False,)
 
 
 class CustomUserAdmin(UserAdmin):
