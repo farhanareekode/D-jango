@@ -1,9 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseForbidden
-from accounts.models import CustomUser
+
 from .forms import PatientProfileForm
 from .models import PatientProfile, Departments, Doctors
+from accounts.models import CustomUser
 
 
 def index(request):
