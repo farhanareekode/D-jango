@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
-from django.contrib.auth import login,logout
+from django.contrib.auth import login, logout
 from .forms import PatientRegistrationForm, DoctorRegistrationForm, LoginForm
 
 
@@ -71,7 +71,7 @@ def login_view(request):
             # Debugging: Print user details and role
             print(f"Logged in user: {user.username}, is_doctor: {user.is_doctor}")
 
-            # Check user role and redirect to their profile
+            # Check a user role and redirect to their profile
             if user.is_doctor:
                 return redirect('doctor_profile', identifier=user.username)
             else:

@@ -37,9 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'home',
     'accounts',
-
+    'home',
 ]
 
 MIDDLEWARE = [
@@ -131,6 +130,11 @@ MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "templates/static"]
+
+# login url for login required decorator in views
+LOGOUT_REDIRECT_URL = '/home'
+
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True

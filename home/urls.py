@@ -8,5 +8,6 @@ urlpatterns = [
     path('patient_profile_add_details', views.patient_profile_add_details, name='patient_profile_add_details'),
     path('department', views.department, name='department'),
     path('doctors', views.doctors, name='doctors'),
+    path('booking/<str:identifier>', views.booking, name='booking'),
 ]
 

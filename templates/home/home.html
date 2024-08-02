@@ -1,46 +1,55 @@
 {% extends 'home/base.html' %} {% block title%} Home {% endblock %}
- {%block content%}
+{% block content %}
 {% load static %}
 
-    <link rel="stylesheet" href="{% static '/css/home.css'%}">
-    
- 
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    display: grid;
+    grid-template-rows: 1fr auto; /* Carousel takes remaining space, footer is auto height */
+  }
+  .carousel-item {
+    height: 75vh; /* Fullscreen height */
+  }
+  .carousel-item img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover; /* Ensure the image covers the entire item */
+  }
+  footer {
+    height: 60px; /* Set footer height */
+    background-color: #f8f9fa; /* Example background color */
+    text-align: center;
+    line-height: 60px; /* Center text vertically */
+  }
+</style>
 
-
-    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-          
-          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        </div>
-        
-
-<div class="carousel-inner">
-          <div class="carousel-item active">
-
-              <img src="{% static 'images/er.jpg' %}" alt="">
-          </div>
-          <div class="carousel-item">
-
-              <img src="{% static 'images/sr.jpg' %}" alt="">
-          </div>
-         <div class="carousel-item">
-             <img src="{% static 'images/yt.png' %}" alt="">
-          </div>
-
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
   </div>
-
-
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-
-   
-{%endblock%}
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{% static 'images/er.jpg' %}" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'images/sr.jpg' %}" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'images/yt.png' %}" class="d-block w-100" alt="...">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+{% endblock %}

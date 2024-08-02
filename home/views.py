@@ -2,8 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseForbidden
 
-from .forms import PatientProfileForm
-from .models import PatientProfile, Departments, Doctors
+from .forms import PatientProfileForm, BookingForm
+from .models import PatientProfile, Departments, Doctors, Booking
 from accounts.models import CustomUser
 
 
@@ -26,12 +26,16 @@ def doctor_profile(request, identifier):
     return render(request, 'home/doctor_profile.html', {'user': user})
 
 
-
 @login_required
 def patient_profile_add_details(request):
     user = request.user
     # Try to get the existing profile
     patient_profile_details, created = PatientProfile.objects.get_or_create(user=user)
+    booking_details = Booking.objects.filter(PatientProfile=PatientProfile)
+
+    # Fetch future and past bookings
+    future_bookings = Booking.objects.filter(PatientProfile=PatientProfile, booking_date__gte=timezone.now().date())
+    past_bookings = Booking.objects.filter(PatientProfile=PatientProfile, booking_date__lt=timezone.now().date())
 
     if request.method == "POST":
         form = PatientProfileForm(request.POST, request.FILES, instance=patient_profile_details)
@@ -48,6 +52,9 @@ def patient_profile_add_details(request):
     profile_dict = {
         'form': form,
         'user': user,
+        'booking_details': booking_details,
+        'future_bookings': future_bookings,
+        'past_bookings': past_bookings,
     }
     return render(request, 'home/patient_profile_details.html', profile_dict)
 
@@ -84,3 +91,26 @@ def doctors(request):
         'doctors': Doctors.objects.all()
     }
     return render(request, 'home/doctors.html', dict_docs)
+
+
+@login_required
+def booking(request, identifier):
+    user = get_object_or_404(CustomUser, username=identifier)
+    # Check if the logged-in user is the same as the user whose bookings are being accessed
+    if request.user != user:
+        return redirect('login')
+    user_profile = get_object_or_404(PatientProfile, user=user)
+    if request.method == "POST":
+        form = BookingForm(request.POST)
+        if form.is_valid():
+            booking_appointment = form.save(commit=False)
+            booking_appointment.user_profile = user_profile
+            booking_appointment.save()
+            return redirect('patient_profile', user.username)
+    else:
+        form = BookingForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'home/booking.html', context)

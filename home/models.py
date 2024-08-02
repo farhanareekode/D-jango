@@ -41,3 +41,14 @@ class Doctors(models.Model):
 
     def __str__(self):
         return 'Dr ' + self.doc_name + ' - (' + self.doc_spec + ')'
+
+
+class Booking(models.Model):
+    user_profile = models.ForeignKey(PatientProfile, on_delete=models.CASCADE, related_name='booking', null=True,
+                                     blank=True)
+    patient_name = models.CharField(max_length=255)
+    patient_phone = models.CharField(max_length=10)
+    patient_email = models.EmailField()
+    doctor_name = models.ForeignKey(Doctors, on_delete=models.CASCADE)
+    booking_date = models.DateField()
+    booked_on = models.DateField(auto_now=True)
