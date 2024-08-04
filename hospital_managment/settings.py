@@ -132,7 +132,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "templates/static"]
 
 # login url for login required decorator in views
-LOGOUT_REDIRECT_URL = '/home'
+LOGOUT_REDIRECT_URL = 'home'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -141,3 +141,6 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'lifecarehospitalmalappuram@gmail.com'
 EMAIL_HOST_PASSWORD = 'wduv nsxn stmb bbsl'
+
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'

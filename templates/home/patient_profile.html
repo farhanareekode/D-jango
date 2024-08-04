@@ -44,7 +44,11 @@
           <a class="nav-link text-white" href="{% url 'home' %}">Home</a>
         </li>
         <li class="nav-item">
+            {% if patient_profile.image %}
           <a class="nav-link text-white" href="{% url 'booking' request.user.username %}">Make an appointment</a>
+            {% else %}
+            <p>hello</p>
+            {% endif %}
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="#">Departments</a>
@@ -56,17 +60,17 @@
           <a class="nav-link text-white" href="{% url 'logout' %}">Logout</a>
         </li>
 
+
       </ul>
     </div>
   </div>
 </nav>
 
 <div class="container">
-  {% if not add_details_exists %}
-  <li class="nav-item">
-    <a class="nav-link text-black" href="{% url 'patient_profile_add_details' %}">Add Details</a>
-  </li>
-{% endif %}
+
+          {% if not add_details_exists %}
+         <a class="button bg-danger" href="{% url 'patient_profile_add_details' %}">Add Details</a>
+          {% endif %}
 
 {% if add_details_exists %}
   {% for detail in add_details %}
@@ -74,6 +78,7 @@
       <div class="content">
         <div class="user-image">
           {% if detail.image %}
+
           <br>
             <p> <img class="user-image" src="{{ detail.image.url }}" alt="User Image"></p>
 
@@ -98,7 +103,60 @@
 {% else %}
   <p>No details available.</p>
 {% endif %}
+  <!-- booking.html -->
+{% if future_bookings.exists %}
+        <h1>Upcoming Bookings</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Phone</th>
+                    <th>Doctor Name</th>
+                    <th>Booking Date</th>
+                    <th>Booked On</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detail in future_bookings %}
+                    <tr>
+                        <td>{{ detail.patient_phone }}</td>
+                        <td>{{ detail.doctor_name.doc_name }}</td>
+                        <td>{{ detail.booking_date }}</td>
+                        <td>{{ detail.booked_on }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No upcoming bookings available.</p>
+    {% endif %}
 
+    {% if past_bookings.exists %}
+        <h1>Booking History</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Phone</th>
+                    <th>Doctor Name</th>
+                    <th>Booking Date</th>
+                    <th>Booked On</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detail in past_bookings %}
+                    <tr>
+                        <td>{{ detail.patient_phone }}</td>
+                        <td>{{ detail.doctor_name.doc_name }}</td>
+                        <td>{{ detail.booking_date }}</td>
+                        <td>{{ detail.booked_on }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No booking history available.</p>
+    {% endif %}
+<br>
+  <br>
 
 <section class="">
   <footer class="pt-2 pb-2 bg-info text-light">

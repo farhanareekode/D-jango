@@ -1,9 +1,14 @@
-from django.conf import settings
-from django.contrib import messages
-from django.core.mail import send_mail
-from django.shortcuts import render, redirect
+from django.http import HttpResponseNotAllowed
 from django.contrib.auth import login, logout
 from .forms import PatientRegistrationForm, DoctorRegistrationForm, LoginForm
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from django.conf import settings
+from .forms import PatientRegistrationForm
+from .models import CustomUser
+import logging
+logger = logging.getLogger(__name__)
 
 
 def register_patient(request):
@@ -81,6 +86,13 @@ def login_view(request):
     return render(request, 'accounts/login.html', {'form': form})
 
 
-def logout_view(request):
-    logout(request)
-    return render(request, 'home/home.html')
+# def logout_view(request):
+#     logout(request)
+#     return render(request, 'home/home.html')
+
+def custom_logout_view(request):
+    if request.method == 'POST' or request.method == 'GET':  # Allow both GET and POST
+        logout(request)
+        return redirect('home')  # Redirect to the homepage after logout
+    else:
+        return HttpResponseNotAllowed(['GET', 'POST'])

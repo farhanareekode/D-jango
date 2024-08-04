@@ -72,6 +72,22 @@
 		.extra-margin-left {
         margin-left: 45%; /* Adjust this value to your needs */
     }
+		.alert {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+	}
+
+	.success {
+		background-color: #d4edda;
+		color: #155724;
+	}
+
+	.error {
+		background-color: #f8d7da;
+		color: #721c24;
+	}
+
 
 	</style>
 
@@ -117,9 +133,19 @@
 				   		</div>
 					</form>
 				</div>
-				{% for message in messages %}
-				<p id="message">{{message}}</p>
-				{% endfor %}
+
+				<div class="mt-4">
+				{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+</div>
+
 				<div class="mt-4">
 					<div class="d-flex justify-content-center links">
 						Already have an account? <a href="{% url 'login' %}" class="ml-2">Login</a>

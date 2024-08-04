@@ -1,10 +1,14 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponseForbidden
-
+from datetime import timezone
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils import timezone
 from .forms import PatientProfileForm, BookingForm
-from .models import PatientProfile, Departments, Doctors, Booking
-from accounts.models import CustomUser
+from .models import PatientProfile, Departments, Doctors, Booking, DoctorsProfile
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponseForbidden, HttpResponseNotFound, Http404, HttpResponse
+from django.contrib.auth.decorators import login_required
+from .models import Booking, CustomUser
 
 
 def index(request):
@@ -13,17 +17,42 @@ def index(request):
 
 @login_required
 def doctor_profile(request, identifier):
-    # Fetch user based on the username
     user = get_object_or_404(CustomUser, username=identifier, is_doctor=True)
     current_user = request.user
-    # Check if the doctor is approved
+
     if not user.is_approved:
-        return HttpResponseForbidden('Access Denied. Waite for approved.')
-    # Check if the current user is accessing their own profile
+        return HttpResponseForbidden('Access Denied. Wait for approval.')
+
     if identifier != current_user.username:
         return HttpResponseForbidden('Access Denied')
-        # Render the profile page for the current user
-    return render(request, 'home/doctor_profile.html', {'user': user})
+
+    try:
+        # Fetch the Doctors instance using the user field
+        doctor_instance = Doctors.objects.get(user=user)
+    except Doctors.DoesNotExist:
+        return HttpResponseForbidden(
+            'Doctor profile does not exist in hospital data \n Contact to hospital management.')
+
+    # Handle booking approval
+    if request.method == 'POST':
+        booking_id = request.POST.get('booking_id')
+        booking = get_object_or_404(Booking, id=booking_id)
+        if booking.doctor_name != doctor_instance:
+            return HttpResponseForbidden('Access Denied')
+
+        booking.is_approved = True
+        booking.save()
+        return redirect('doctor_profile', identifier=request.user.username)
+
+    # Filter bookings by the correct doctor instance
+    bookings = Booking.objects.filter(doctor_name=doctor_instance)
+    return render(request, 'home/doctor_profile.html', {'user': user, 'bookings': bookings})
+
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_doctors_profile(sender, instance, created, **kwargs):
+    if created and instance.is_doctor:
+        DoctorsProfile.objects.create(user=instance)
 
 
 @login_required
@@ -31,11 +60,6 @@ def patient_profile_add_details(request):
     user = request.user
     # Try to get the existing profile
     patient_profile_details, created = PatientProfile.objects.get_or_create(user=user)
-    booking_details = Booking.objects.filter(PatientProfile=PatientProfile)
-
-    # Fetch future and past bookings
-    future_bookings = Booking.objects.filter(PatientProfile=PatientProfile, booking_date__gte=timezone.now().date())
-    past_bookings = Booking.objects.filter(PatientProfile=PatientProfile, booking_date__lt=timezone.now().date())
 
     if request.method == "POST":
         form = PatientProfileForm(request.POST, request.FILES, instance=patient_profile_details)
@@ -52,9 +76,7 @@ def patient_profile_add_details(request):
     profile_dict = {
         'form': form,
         'user': user,
-        'booking_details': booking_details,
-        'future_bookings': future_bookings,
-        'past_bookings': past_bookings,
+
     }
     return render(request, 'home/patient_profile_details.html', profile_dict)
 
@@ -62,6 +84,7 @@ def patient_profile_add_details(request):
 @login_required
 def patient_profile(request, identifier):
     user = get_object_or_404(CustomUser, username=identifier)
+    patient_profile, created = PatientProfile.objects.get_or_create(user=user)
     current_user = request.user
 
     # Check if the current user is accessing their own profile
@@ -70,11 +93,17 @@ def patient_profile(request, identifier):
 
     add_details = PatientProfile.objects.filter(user=user)
     add_details_exists = add_details.exists()  # Check if there are any details
-
+    booking_details = Booking.objects.filter(patient_profile=patient_profile, is_approved=True)
+    future_bookings = Booking.objects.filter(patient_profile=patient_profile, booking_date__gte=timezone.now().date())
+    past_bookings = Booking.objects.filter(patient_profile=patient_profile, booking_date__lt=timezone.now().date())
     context = {
         'add_details': add_details,
         'add_details_exists': add_details_exists,
+        'booking_details': booking_details,
+        'future_bookings': future_bookings,
+        'past_bookings': past_bookings,
         'user': user,
+        'patient_profile': patient_profile,
     }
     return render(request, 'home/patient_profile.html', context)
 
@@ -96,17 +125,23 @@ def doctors(request):
 @login_required
 def booking(request, identifier):
     user = get_object_or_404(CustomUser, username=identifier)
+
     # Check if the logged-in user is the same as the user whose bookings are being accessed
     if request.user != user:
         return redirect('login')
+
     user_profile = get_object_or_404(PatientProfile, user=user)
+
     if request.method == "POST":
         form = BookingForm(request.POST)
         if form.is_valid():
             booking_appointment = form.save(commit=False)
-            booking_appointment.user_profile = user_profile
+            booking_appointment.user = request.user  # Set the user manually
+            booking_appointment.patient_profile = user_profile
             booking_appointment.save()
-            return redirect('patient_profile', user.username)
+            return redirect('patient_profile', user.username)  # Redirect to profile page
+        else:
+            print(form.errors)  # Debugging line to print form errors
     else:
         form = BookingForm()
 

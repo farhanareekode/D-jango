@@ -17,10 +17,12 @@ class PatientProfileForm(forms.ModelForm):
             super().__init__(*args, **kwargs)
             self.fields['image'].label = 'Profile Photo'
 
+
 class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
         fields = '__all__'
+        exclude = ['user']
         widgets = {
             'booking_date': DateInput(),
         }

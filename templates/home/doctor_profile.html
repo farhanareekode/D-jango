@@ -7,5 +7,20 @@
 <body>
     <h1>Profile of {{ user.username }}</h1>
 <a class="nav-link text-white" href="{% url 'home' %}">Home </a>
+<h1>Dr. {{ user.username }}'s Profile</h1>
+
+<h2>Bookings</h2>
+<ul>
+    {% for booking in bookings %}
+        <li>{{ booking.patient_name }} - {{ booking.booking_date }} - Approved: {{ booking.is_approved }}</li>
+        {% if not booking.is_approved %}
+            <form method="post" action="{% url 'doctor_profile' user.username %}">
+                {% csrf_token %}
+                <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                <button type="submit">Approve</button>
+            </form>
+        {% endif %}
+    {% endfor %}
+</ul>
 </body>
 </html>
