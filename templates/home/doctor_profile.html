@@ -1,26 +1,94 @@
-<!-- templates/home/profile.html -->
 <!DOCTYPE html>
 <html>
-<head>
-    <title>doctor_profile</title>
-</head>
-<body>
-    <h1>Profile of {{ user.username }}</h1>
-<a class="nav-link text-white" href="{% url 'home' %}">Home </a>
-<h1>Dr. {{ user.username }}'s Profile</h1>
+  <head>
+    <title>Doctor Profile</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      header {
+        width: 100%;
+        background-color: #007bff;
+        color: white;
+        padding: 10px;
+        text-align: center;
+      }
+      h1 {
+        color: #333;
+      }
+      a.nav-link {
+        color: white;
+        text-decoration: none;
+        margin-right: 15px;
+      }
+      h2 {
+        margin-top: 20px;
+        color: #007bff;
+      }
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      li {
+        background-color: white;
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      form {
+        display: inline;
+      }
+      button {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        margin-left: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      button:hover {
+        background-color: #218838;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Profile of {{ user.username }}</h1>
+      <a class="nav-link text-white" href="{% url 'home' %}">Home</a>
+    </header>
 
-<h2>Bookings</h2>
-<ul>
-    {% for booking in bookings %}
-        <li>{{ booking.patient_name }} - {{ booking.booking_date }} - Approved: {{ booking.is_approved }}</li>
-        {% if not booking.is_approved %}
-            <form method="post" action="{% url 'doctor_profile' user.username %}">
-                {% csrf_token %}
-                <input type="hidden" name="booking_id" value="{{ booking.id }}">
-                <button type="submit">Approve</button>
-            </form>
-        {% endif %}
-    {% endfor %}
-</ul>
-</body>
+    <main>
+      <h1>Dr. {{ user.username }}'s Profile</h1>
+
+      <h2>Bookings</h2>
+      <ul>
+        {% for booking in bookings %}
+        <li>
+          <strong>Patient:</strong> {{ booking.patient_name }} <br />
+          <strong>Date:</strong> {{ booking.booking_date }} <br />
+          {% if booking.is_approved %}
+          <strong>Approved:</strong> <br />
+          {% else %}
+          <strong>Not Approved:</strong> <br />
+          {% endif%} {% if not booking.is_approved %}
+          <form method="post" action="{% url 'doctor_profile' user.username %}">
+            {% csrf_token %}
+            <input type="hidden" name="booking_id" value="{{ booking.id }}" />
+            <button type="submit">Approve</button>
+          </form>
+        </li>
+        {% endif %} {% endfor %}
+      </ul>
+    </main>
+  </body>
 </html>

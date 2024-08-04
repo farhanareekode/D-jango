@@ -44,10 +44,10 @@
           <a class="nav-link text-white" href="{% url 'home' %}">Home</a>
         </li>
         <li class="nav-item">
-            {% if patient_profile.image %}
+            {% if patient_profile.image and patient_profile.name and patient_profile.phone and patient_profile.address and patient_profile.country and patient_profile.state and  patient_profile.blood_grp   %}
           <a class="nav-link text-white" href="{% url 'booking' request.user.username %}">Make an appointment</a>
             {% else %}
-            <p>hello</p>
+           <a class="nav-link text-white"  onclick="appointment_alert()">Make an appointment</a>
             {% endif %}
         </li>
         <li class="nav-item">
@@ -68,8 +68,12 @@
 
 <div class="container">
 
-          {% if not add_details_exists %}
+          {% if add_details_exists %}
+          {% if patient_profile.address %}
+         <a class="button bg-danger" href="{% url 'patient_profile_add_details' %}">Update Details</a>
+         {% else %}
          <a class="button bg-danger" href="{% url 'patient_profile_add_details' %}">Add Details</a>
+         {% endif %}
           {% endif %}
 
 {% if add_details_exists %}
@@ -113,8 +117,9 @@
                     <th>Doctor Name</th>
                     <th>Booking Date</th>
                     <th>Booked On</th>
+                    <th>Booked status</th>
                 </tr>
-            </thead>
+            </thead>  
             <tbody>
                 {% for detail in future_bookings %}
                     <tr>
@@ -122,6 +127,11 @@
                         <td>{{ detail.doctor_name.doc_name }}</td>
                         <td>{{ detail.booking_date }}</td>
                         <td>{{ detail.booked_on }}</td>
+                        {% if detail.is_approved %}
+                        <td>Approved</td>
+                        {% else %}
+                        <td>Pending</td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>
@@ -171,6 +181,11 @@
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script>
+  function appointment_alert() {
+    alert("Complete profile detail before make appointment!");
+  }
+  </script>
 </div>
 </body>
 </html>
