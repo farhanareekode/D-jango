@@ -25,6 +25,6 @@ admin.site.index_title = "Life care administator"
 urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('', include('home.urls')),
-                  path('accounts/ ', include('accounts.urls')),
-
+                  path('accounts/', include('accounts.urls')),
+                  path('payments/', include('payments.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

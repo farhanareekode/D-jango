@@ -10,7 +10,6 @@ from django.http import HttpResponseForbidden, HttpResponseNotFound, Http404, Ht
 from django.contrib.auth.decorators import login_required
 from .models import Booking, CustomUser
 
-
 def index(request):
     return render(request, 'home/home.html')
 

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'home',
+    'payments',
 ]
 
 MIDDLEWARE = [
@@ -144,3 +145,7 @@ EMAIL_HOST_PASSWORD = 'wduv nsxn stmb bbsl'
 
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+
+key_id = 'rzp_test_HCvc3q3BZPRcGl'
+key_secret = 'qXUVJmb7GlPdcdR3JuwJlHnN'

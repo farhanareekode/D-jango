@@ -118,6 +118,8 @@
                     <th>Booking Date</th>
                     <th>Booked On</th>
                     <th>Booked status</th>
+                    <th>Payment</th>
+                    
                 </tr>
             </thead>  
             <tbody>
@@ -128,8 +130,10 @@
                         <td>{{ detail.booking_date }}</td>
                         <td>{{ detail.booked_on }}</td>
                         {% if detail.is_approved %}
-                        <td>Approved</td>
+                        <td>Doctor Approved</td>
+                        <td><a class="nav-link " href="{% url 'payments' user.username %}">Make Payment</a> </td>
                         {% else %}
+                        <td>Pending</td>
                         <td>Pending</td>
                         {% endif %}
                     </tr>
