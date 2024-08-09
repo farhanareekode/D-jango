@@ -8,7 +8,7 @@ from .models import PatientProfile, Departments, Doctors, Booking, DoctorsProfil
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseForbidden, HttpResponseNotFound, Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Booking, CustomUser
+from accounts.models import CustomUser
 
 def index(request):
     return render(request, 'home/home.html')

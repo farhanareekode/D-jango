@@ -55,6 +55,8 @@ class Booking(models.Model):
     booking_date = models.DateField()
     booked_on = models.DateField(auto_now=True)
     is_approved = models.BooleanField(default=False)
+    is_payment = models.BooleanField(default=False)
+
 
     # def __str__(self):
     #     return f"{self.patient_profile.name} - {self.doctor_name} - {self.booking_date}"

@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
   <head>
     <meta charset="utf-8" />
@@ -10,20 +6,22 @@
     <title>make_payment</title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="" />
   </head>
   <body>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
       var options = {
-        key: "rzp_test_UCMFgXODLnrhu2", // Enter the Key ID generated from the Dashboard
-        amount: "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        key: "rzp_test_HCvc3q3BZPRcGl",
+        amount: "50000",
         currency: "INR",
         name: "Acme Corp",
         description: "Test Transaction",
         image: "https://example.com/your_logo",
-        order_id: "{{ order_id }}", //This is a sample Order ID. Pass the id obtained in the response of Step 1
+        order_id: "{{ order_id }}",
         callback_url: "https://eneqd3r9zrjok.x.pipedream.net/",
+        handler: function (response) {
+          document.getElementById('payment-form').submit();
+        },
         prefill: {
           name: "Gaurav Kumar",
           email: "gaurav.kumar@example.com",
@@ -38,7 +36,11 @@
       };
       var rzp1 = new Razorpay(options);
     </script>
-    <button id="rzp-button1">Pay with Razorpay</button>
+    <form action="{% url 'success' user.username%}" method="POST" id="payment-form">
+      {% csrf_token %}
+      <input type="hidden" name="success_url" value="{% url 'success' user %}">
+      <button id="rzp-button1">Pay with Razorpay</button>
+    </form>
     <script>
       document.getElementById("rzp-button1").onclick = function (e) {
         rzp1.open();
