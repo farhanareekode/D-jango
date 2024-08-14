@@ -1,3 +1,5 @@
+
+from datetime import datetime
 from django import forms
 from django.forms import DateInput
 
@@ -24,5 +26,8 @@ class BookingForm(forms.ModelForm):
         fields = '__all__'
         exclude = ['user']
         widgets = {
-            'booking_date': DateInput(),
+            'booking_date': forms.DateInput(attrs={
+                'type': 'date',
+                'min': datetime.now().date().strftime('%Y-%m-%d')  # Set min to today
+            })
         }

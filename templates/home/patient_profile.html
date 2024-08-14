@@ -115,6 +115,7 @@
                 <tr>
                     <th>Phone</th>
                     <th>Doctor Name</th>
+                    <th>patient Name</th>
                     <th>Booking Date</th>
                     <th>Booked On</th>
                     <th>Booked status</th>
@@ -127,14 +128,21 @@
                     <tr>
                         <td>{{ detail.patient_phone }}</td>
                         <td>{{ detail.doctor_name.doc_name }}</td>
+                        <td>{{ detail.patient_name }}</td>
                         <td>{{ detail.booking_date }}</td>
                         <td>{{ detail.booked_on }}</td>
                         {% if detail.is_approved %}
-                        <td>Doctor Approved</td>
-                        <td><a class="nav-link " href="{% url 'payments' user.username detail.id %}">Make Payment</a> </td>
+                            <td>Doctor Approved</td>
+                                {% if detail.is_payment %}
+                                <td>Success </td>
+                                {% else %}
+                                <td><a class="nav-link " href="{% url 'payments' user.username detail.id %}">Make Payment</a> </td>
+                                {% endif %}
                         {% else %}
                         <td>Pending</td>
+
                         <td>Pending</td>
+
                         {% endif %}
                     </tr>
                 {% endfor %}

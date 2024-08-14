@@ -36,9 +36,9 @@
       };
       var rzp1 = new Razorpay(options);
     </script>
-    <form action="{% url 'success' user.username%}" method="POST" id="payment-form">
+    <form action="{% url 'success' user.username transactions.id %}" method="POST" id="payment-form">
       {% csrf_token %}
-      <input type="hidden" name="success_url" value="{% url 'success' user %}">
+      <input type="hidden" name="success_url" value="{% url 'success' user transactions.id %}">
       <button id="rzp-button1">Pay with Razorpay</button>
     </form>
     <script>

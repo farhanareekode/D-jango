@@ -1,4 +1,6 @@
 from datetime import timezone
+from django.contrib import messages
+
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -9,6 +11,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseForbidden, HttpResponseNotFound, Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
 from accounts.models import CustomUser
+
 
 def index(request):
     return render(request, 'home/home.html')
@@ -130,7 +133,6 @@ def booking(request, identifier):
         return redirect('login')
 
     user_profile = get_object_or_404(PatientProfile, user=user)
-
     if request.method == "POST":
         form = BookingForm(request.POST)
         if form.is_valid():

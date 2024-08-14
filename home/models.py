@@ -57,9 +57,8 @@ class Booking(models.Model):
     is_approved = models.BooleanField(default=False)
     is_payment = models.BooleanField(default=False)
 
-
     # def __str__(self):
-    #     return f"{self.patient_profile.name} - {self.doctor_name} - {self.booking_date}"
+    #     return f"{self.booking.id}"
 
 
 class DoctorsProfile(models.Model):
