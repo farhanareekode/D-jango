@@ -58,7 +58,7 @@ class Booking(models.Model):
     is_payment = models.BooleanField(default=False)
 
     # def __str__(self):
-    #     return f"{self.booking.id}"
+    #     return 'Dr ' + self.doctor_name + ' - (' + self.doc_spec + ')'
 
 
 class DoctorsProfile(models.Model):

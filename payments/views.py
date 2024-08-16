@@ -6,6 +6,10 @@ from home.models import Booking, PatientProfile
 import razorpay
 from .models import Transactions
 
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
 client = razorpay.Client(auth=("rzp_test_HCvc3q3BZPRcGl", "qXUVJmb7GlPdcdR3JuwJlHnN"))
 
 
@@ -44,7 +48,6 @@ def payments(request, identifier, booking_id):
         'user': user,
         'order_id': order_id,
         'transactions': transactions,
-
     }
     return render(request, 'payments/make_payment.html', context)
 
@@ -76,4 +79,87 @@ def success(request, identifier, transactions_id):
     booking.is_payment = True
     booking.save()
 
-    return render(request, 'payments/success.html')
+    user_details = get_object_or_404(PatientProfile, user=current_user)
+    booking_details = get_object_or_404(Booking, id=booking.id, user=current_user)
+    context = {
+        'user_details': user_details,
+        'transactions': transactions,
+        'booking_details': booking_details,
+
+    }
+
+    return render(request, 'payments/success.html',context)
+
+
+# def payment_pdf_view(request, identifier, booking_id):
+#     current_user = request.user
+#     if identifier != current_user.username:
+#         return HttpResponseForbidden('Access Denied')
+#     user_details = get_object_or_404(PatientProfile, user=current_user)
+#     transactions = get_object_or_404(Transactions, patient_profile=user_details.user.id)
+#     booking_details = get_object_or_404(Booking, id=booking_id, user=current_user)
+#     template_path = 'payments/payment_report.html'
+#
+#     context = {
+#         'user_details': user_details,
+#         'transactions': transactions,
+#         'booking_details': booking_details,
+#
+#         }
+#     # Create a Django response object, and specify content_type as pdf
+#     response = HttpResponse(content_type='application/pdf')
+#     # to download
+#     response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+#
+#     # to view
+#     response['Content-Disposition'] = 'filename="report.pdf"'
+#
+#     # find the template and render it.
+#     template = get_template(template_path)
+#     html = template.render(context)
+#
+#     # create a pdf
+#     pisa_status = pisa.CreatePDF(
+#         html, dest=response)
+#     # if error then show some funny view
+#     if pisa_status.err:
+#         return HttpResponse('We had some errors <pre>' + html + '</pre>')
+#     return response
+
+def payment_pdf_view(request, identifier, booking_id, action):
+    current_user = request.user
+    if identifier != current_user.username:
+        return HttpResponseForbidden('Access Denied')
+
+    user_details = get_object_or_404(PatientProfile, user=current_user)
+    transactions = get_object_or_404(Transactions, patient_profile=user_details.user.id)
+    booking_details = get_object_or_404(Booking, id=booking_id, user=current_user)
+
+    template_path = 'payments/payment_report.html'
+    context = {
+        'user_details': user_details,
+        'transactions': transactions,
+        'booking_details': booking_details,
+    }
+
+    # Create a Django response object and specify content_type as PDF
+    response = HttpResponse(content_type='application/pdf')
+
+    # Set the Content-Disposition header based on the action parameter
+    if action == 'download':
+        response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+    else:  # for view
+        response['Content-Disposition'] = 'inline; filename="report.pdf"'
+
+    # Find the template and render it
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # Create a PDF
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    # If error, return error message
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+
+    return response

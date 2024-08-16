@@ -27,16 +27,6 @@
       .content-table th {
           background-color: #f4f4f4;
       }
-         .button-container {
-      margin-top: 20px;
-      display: flex;
-      justify-content: center;
-      width: 100%;
-  }
-
-  .button-container .btn {
-      margin: 0 10px; /* Adjust the spacing as needed */
-  }
     </style>
 </head>
 <body>
@@ -58,7 +48,7 @@
                 <th>Information</th>
             </tr>
             <tr>
-                <td>Patient Name</td>
+                <td>Name</td>
                 <td>{{ booking_details.patient_name }}</td>
             </tr>
             <tr>
@@ -85,7 +75,7 @@
                 <td>{{ booking_details.booking_date }}</td>
             </tr>
             <tr>
-                <td>Booking Status</td>
+                <td>Approved</td>
                 <td>{{ booking_details.is_approved }}</td>
             </tr>
             <tr>
@@ -96,7 +86,7 @@
                 <td>{{ transactions.payment_date }}</td>
             </tr>
             <tr>
-                <td>Payment ID</td>
+                <td>Payment id</td>
                 <td>{{ transactions.payment_id }}</td>
             </tr>
             <tr>
@@ -115,10 +105,6 @@
             </tr>
         </table>
     </div>
-            <div class="button-container">
-                <button class="btn btn-primary text-white" onclick="location.href='{% url 'patient_profile' user.username %}'">Back to profile</button>
-                <!-- Button for downloading the PDF -->
-                <button class="btn btn-primary text-white" onclick="location.href='{% url 'payment_pdf_download' user.username booking_details.id %}'">Download</button>
-            </div>
+
 </body>
 </html>

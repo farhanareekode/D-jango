@@ -129,8 +129,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = BASE_DIR / 'jango/uploads'
 MEDIA_URL = '/media/'
 
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = [BASE_DIR / "templates/static"]
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "templates/static"]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "templates/static")]
 
 # login url for login required decorator in views
 LOGOUT_REDIRECT_URL = 'home'
